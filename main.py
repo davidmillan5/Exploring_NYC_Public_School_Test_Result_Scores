@@ -57,13 +57,29 @@ print(missing_data)
 
 math_max = 800
 best_math_results = 800 * 0.80
-print(best_math_results)
+#print(best_math_results)
 
+#print('========   Best Math Schools ===============')
+best_math_schools_prev = schools[schools['average_math'] >= best_math_results].sort_values(by=['average_math'], ascending=False)
+best_math_schools = best_math_schools_prev[['school_name', 'average_math']]
 print('========   Best Math Schools ===============')
-best_math_schools = schools[schools['average_math'] >= best_math_results].sort_values(by=['average_math'], ascending=False)
-print(best_math_schools[['school_name', 'average_math']])
+print(best_math_schools)
 print('========   Best Math Schools ===============')
+print(best_math_schools[['school_name', 'average_math']].set_index('school_name'))
+#print('========   Best Math Schools ===============')
+
+# What are the top 10 performing schools based on the combined SAT scores?
+#
+# Save your results as a pandas DataFrame called top_10_schools containing the "school_name" and a new column named "total_SAT",
+# with results ordered by "total_SAT" in descending order ("total_SAT" being the sum of math, reading, and writing scores).
+
+columns_to_sum = ['average_math', 'average_reading', 'average_writing']
+schools['total_SAT'] = np.sum(schools[columns_to_sum], axis=1)
+
+print("\nDataFrame with new 'total_SAT' column:")
+print(schools.sort_values(by=['total_SAT'],ascending=False))
 
 
-
-
+print('========   top_10_schools   ===============')
+top_10_schools = schools[['school_name', 'total_SAT']].sort_values(by=['total_SAT'],ascending=False).head(10)
+print(top_10_schools)
