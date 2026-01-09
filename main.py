@@ -83,3 +83,44 @@ print(schools.sort_values(by=['total_SAT'],ascending=False))
 print('========   top_10_schools   ===============')
 top_10_schools = schools[['school_name', 'total_SAT']].sort_values(by=['total_SAT'],ascending=False).head(10)
 print(top_10_schools)
+
+
+
+# Which single borough has the largest standard deviation in the combined SAT score?
+#
+# Save your results as a pandas DataFrame called largest_std_dev.
+# The DataFrame should contain one row, with:
+# "borough" - the name of the NYC borough with the largest standard deviation of "total_SAT".
+# "num_schools" - the number of schools in the borough.
+# "average_SAT" - the mean of "total_SAT".
+# "std_SAT" - the standard deviation of "total_SAT".
+# Round all numeric values to two decimal places.
+
+
+print("========================== Schools ============================")
+print(schools.head(10))
+
+#print(schools.groupby('borough')['total_SAT'].std().round(2).max())
+schools['largest_std_total_std'] = schools['total_SAT'].std().round(2).max()
+#print(schools.groupby('borough')['school_name'].nunique())
+schools['num_schools'] = schools.groupby('borough')['school_name'].transform('count')
+#print('num_schools', schools['num_schools'])
+schools['average_SAT'] = schools['total_SAT'].mean().round(2)
+schools['std_SAT'] = schools['total_SAT'].std().round(2)
+#print(schools.head())
+#
+
+largest_std_dev = (
+    schools
+    .groupby("borough")
+    .agg(
+        num_schools=("borough", "count"),
+        average_SAT=("total_SAT", "mean"),
+        std_SAT=("total_SAT", "std")
+    )
+    .round(2)
+    .sort_values("std_SAT", ascending=False)
+    .head(1)
+)
+
+print(largest_std_dev)
